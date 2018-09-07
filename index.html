@@ -32,7 +32,7 @@ map.once('load',function(){
   map.addSource('tmp',{
     "type": "vector",
       "tiles": [
-        "http://localhost:7777/v2/tiles/{z}/{x}/{y}.pbf"
+        "http://epic-analytics.cs.colorado.edu:7777/v2/tiles/{z}/{x}/{y}.pbf"
       ]
   })
 
@@ -40,8 +40,7 @@ map.once('load',function(){
     "id": "heatmap",
     "type": "heatmap",
     'source': 'tmp',
-    'source-layer':'tileSummariesgeojsonseq',
-    "maxzoom": 12,
+    'source-layer':'mapbox',
     "paint": {
         // Increase the heatmap weight based on frequency and property magnitude
         "heatmap-weight": [
@@ -49,7 +48,7 @@ map.once('load',function(){
             ["linear"],
             ["get", "edits"],
             1, 0,
-            100, 1
+            5000, 1
         ],
         // Increase the heatmap color weight weight by zoom level
         // heatmap-intensity is a multiplier on top of heatmap-weight
@@ -79,7 +78,7 @@ map.once('load',function(){
             "interpolate",
             ["linear"],
             ["zoom"],
-            0, 15,
+            0, 10,
             13, 5
         ],
         // Transition from heatmap to circle layer by zoom level
@@ -90,29 +89,28 @@ map.once('load',function(){
             7, 1,
             13, 0.5
         ],
-    }
+    },
+    'filter':['all',
+             ['==','team','telenav']
+             ]
   });
     
   map.addLayer({
     "id": "points",
     "type": "circle",
     'source': 'tmp',
-    'source-layer':'tileSummariesgeojsonseq',
+    'source-layer':'mapbox',
     "paint": {
-      "circle-color": {
-        'property':'team',
-        'type':'categorical',
-        'stops':[
-          ['mapbox','red'],
-          ['facebook','blue'],
-          ['microsoft','orange'],
-          ['kaart','pink'],
-          ['telenav','white']
-        ]
-      },
+      "circle-color": 'red',
       "circle-opacity": 0.6,
       "circle-radius":2
     }  
+  });
+    
+  map.on('click',function(){
+      var feats = map.querySourceFeatures()
+      console.log(feats)
+      
   });
 });
 </script>

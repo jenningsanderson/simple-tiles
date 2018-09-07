@@ -15,7 +15,7 @@ if (process.argv.length < 3){
     process.exit(1)
 }
 
-var tilesFile = path.join(__dirname, process.argv[2])
+var tilesFile = path.resolve(process.argv[2])
 
 console.warn("Loading mbtiles File: "+tilesFile)
 
