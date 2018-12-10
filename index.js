@@ -32,7 +32,7 @@ tilelive.load('mbtiles:///' + tilesFile, function(err, source) {
         next();
     });
 
-    app.get(/^\/v2\/tiles\/(\d+)\/(\d+)\/(\d+).pbf$/, function(req, res){
+    app.get(/^\/(\d+)\/(\d+)\/(\d+).pbf$/, function(req, res){
 
         var z = req.params[0];
         var x = req.params[1];

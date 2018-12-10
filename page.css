@@ -1,0 +1,84 @@
+#map-header{
+  height:130px;
+}
+
+#map {
+  height:calc(100vh - 130px);
+  width:100%;
+}
+
+#sidebar{
+  
+}
+
+button#show-help{
+  position:absolute;
+  top:10px;
+  right:10px;
+}
+    
+/* D3 Timeline */
+.axis {
+  font: 10px sans-serif;
+}
+
+.label {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar{
+  fill: steelblue;
+}
+
+.area{
+  fill: steelblue;
+}
+
+.brush .extent {
+  stroke: #fff;
+  stroke-opacity: .6;
+  stroke-width: 2px;
+  fill-opacity: .1;
+  shape-rendering: crispEdges;
+}
+.ticks {
+  font: 10px sans-serif;
+}
+
+.track,
+.track-inset,
+.track-overlay {
+  stroke-linecap: round;
+}
+
+.track {
+  stroke: #000;
+  stroke-opacity: 0.3;
+  stroke-width: 10px;
+}
+
+.track-inset {
+  stroke: #ddd;
+  stroke-width: 8px;
+}
+
+.track-overlay {
+  pointer-events: stroke;
+  stroke-width: 50px;
+  stroke: transparent;
+  cursor: crosshair;
+}
+
+.handle {
+  fill: #fff;
+  stroke: #000;
+  stroke-opacity: 0.5;
+  stroke-width: 1.25px;
+}

@@ -1,16 +1,33 @@
 {
-  "name": "simple-tiles",
+  "name": "wayback-viewer",
   "version": "1.0.0",
-  "description": "A super simple tile server for local development",
+  "description": "Quickly view the contents of vector tiles with support for temporal context, tuned for output from osm-wayback",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jenningsanderson/wayback-viewer.git"
+  },
+  "keywords": [
+    "openstreetmap",
+    "historical",
+    "vector",
+    "tiles",
+    "mbtiles",
+    "osm"
+  ],
+  "author": "Jennings Anderson",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jenningsanderson/wayback-viewer/issues"
+  },
+  "homepage": "https://github.com/jenningsanderson/wayback-viewer#readme",
   "dependencies": {
     "@mapbox/mbtiles": "^0.10.0",
     "@mapbox/tilelive": "^6.0.0",
-    "express": "^4.16.3"
+    "express": "^4.16.4",
+    "topojson": "^3.0.2"
   }
 }

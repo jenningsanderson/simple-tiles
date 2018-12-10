@@ -21,7 +21,7 @@
   <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.23.0/assembly.js"></script>
 
   <script src="js/d3.v4.min.js" type="text/javascript" ></script>
-  <script src="js/d3-timeline-1d.js" type="text/javascript" ></script>
+  <script src="js/d3-timeline.js" type="text/javascript" ></script>
 
   <link href="page.css" type="text/css" rel="stylesheet" />
 
@@ -166,7 +166,7 @@ map.once('load',function(){
     "id": "historical-points",
     "type": "circle",
     'source': 'local-tiles',
-    'source-layer':'historical-geoms',
+    'source-layer':'historical_topojson',
     'minZoom':15,
     'maxZoom':20,
     "paint": {
@@ -181,87 +181,37 @@ map.once('load',function(){
     "id": "current-points",
     "type": "circle",
     'source': 'local-tiles',
-    'source-layer':'historical-geoms',
+    'source-layer':'historical_topojson',
     'minZoom':15,
     'maxZoom':20,
     "paint": {
-      "circle-color": 'limegreen',
+      "circle-color": 'blue',
       "circle-opacity": 0.6,
-      "circle-radius": 2
+      "circle-radius": 1
     },
-    "filter":['any',
-        ['==','@validUntil',false], 
-        ['!has','@validUntil']
-    ]
+    "filter":['==','@validUntil',false]
   });
-
-  map.addLayer({
-    "id": "historical-lines",
-    "type": "line",
-    'source': 'local-tiles',
-    'source-layer':'historical-geoms',
-    'minZoom':15,
-    'maxZoom':20,
-    "paint": {
-      "line-color": 'red',
-      "line-opacity": 0.6,
-      "line-width":2
-    },
-    "filter":['all',['==','$type',"LineString"],['!=','@validUntil',false]]
-  });
-
-  map.addLayer({
-    "id": "current-lines",
-    "type": "line",
-    'source': 'local-tiles',
-    'source-layer':'historical-geoms',
-    'minZoom':15,
-    'maxZoom':20,
-    "paint": {
-      "line-color": 'limegreen',
-      "line-opacity": 0.6,
-      "line-width":2
-    },
-    "filter":['all',
-        ['==','$type',"LineString"],
-        ['any',['==','@validUntil',false], ['!has','@validUntil']]]
-  });
-
 
   document.getElementById('loading').style.display = 'none';
 });
 
 // What happens here if "validUntil is false?"
 
-var timeline = new D3Timeline1D(function(brushEvent){
-                     time = Math.floor( brushEvent.getTime() / 1000 ) //Second resolution is just fine for this...
-                     // endTime   = Math.floor( brushEvent[1].getTime() / 1000 ) //Second resolution is just fine for this...
+var timeline = new D3Timeline(function(brushEvent){
+                     startTime = Math.floor( brushEvent[0].getTime() / 1000 ) //Second resolution is just fine for this...
+                     endTime   = Math.floor( brushEvent[1].getTime() / 1000 ) //Second resolution is just fine for this...
 
-                     console.log("Brush Event", time)
+                     console.log("Brush Event", startTime, endTime)
 
                      map.setFilter('historical-points',['all',
-                       ['!=','@validUntil',false],
-                       ["<=","@validSince", time],
-                       [">","@validUntil", time]
-                    ])
-
-                     map.setFilter('current-points', ['all',
-                        ['any',['==','@validUntil',false], ['!has','@validUntil']],
-                        ["<=","@validSince", time]
-                    ])
-
-                     map.setFilter('historical-lines',['all',
-                       ['==','$type',"LineString"],
-                       ['!=','@validUntil',false],
-                       ["<=","@validSince", time],
-                       [">","@validUntil", time]
+                       [">=","@validSince", startTime],
+                       ["<","@validUntil", endTime]
                      ])
 
-                     map.setFilter('current-lines', ['all',
-                        ['==','$type',"LineString"],
-                        ['any',['==','@validUntil',false], ['!has','@validUntil']],
-                        ["<=","@validSince", time]
-                    ])
+                     map.setFilter('current-points', ['all',
+                        [">=","@validSince", startTime],
+                        ["<","@validSince", endTime]
+                     ])
 })
 
 
@@ -276,13 +226,11 @@ function reloadTimeline(){
     maxDate: TODAY
   };
 
-  count = 10;
-
   while (day < TODAY){
     day = new Date(day.getTime() + MILLISECONDS_IN_A_DAY)
     timelineCounts.push({
         date: day,
-        count: count += 2*Math.random()         
+        count: 10*Math.random()
     })
   }
 
