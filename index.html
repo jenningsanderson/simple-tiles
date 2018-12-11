@@ -174,7 +174,10 @@ map.once('load',function(){
       "circle-opacity": 0.6,
       "circle-radius":2
     },
-    "filter":['!=','@validUntil',false]
+    "filter":['all',
+      ['!=','@validUntil',false],
+      ['==','$type','Point']
+    ]
   });
 
   map.addLayer({
@@ -189,9 +192,9 @@ map.once('load',function(){
       "circle-opacity": 0.6,
       "circle-radius": 2
     },
-    "filter":['any',
-        ['==','@validUntil',false], 
-        ['!has','@validUntil']
+    "filter":['all',
+        ['==','$type','Point'],
+        ['any',['!has','@validUntil'],['==','@validUntil',false]]
     ]
   });
 
@@ -227,6 +230,38 @@ map.once('load',function(){
         ['any',['==','@validUntil',false], ['!has','@validUntil']]]
   });
 
+   map.addLayer({
+    "id": "historical-building",
+    "type": "fill",
+    'source': 'local-tiles',
+    'source-layer':'historical-geoms',
+    'minZoom':15,
+    'maxZoom':20,
+    "paint": {
+      "fill-color": 'red',
+      "fill-opacity": 0.6,
+    },
+    "filter":['all',
+    ['has','building'],
+    ['!=','@validUntil',false]]
+  });
+
+  map.addLayer({
+    "id": "current-building",
+    "type": "fill",
+    'source': 'local-tiles',
+    'source-layer':'historical-geoms',
+    'minZoom':15,
+    'maxZoom':20,
+    "paint": {
+      "fill-color": 'limegreen',
+      "fill-opacity": 0.6,
+    },
+    "filter":['all',
+        ['has','building'],
+        ['any',['==','@validUntil',false], ['!has','@validUntil']]]
+  });
+
 
   document.getElementById('loading').style.display = 'none';
 });
@@ -240,6 +275,7 @@ var timeline = new D3Timeline1D(function(brushEvent){
                      console.log("Brush Event", time)
 
                      map.setFilter('historical-points',['all',
+                       ['==','$type','Point'],
                        ['!=','@validUntil',false],
                        ["<=","@validSince", time],
                        [">","@validUntil", time]
@@ -247,6 +283,7 @@ var timeline = new D3Timeline1D(function(brushEvent){
 
                      map.setFilter('current-points', ['all',
                         ['any',['==','@validUntil',false], ['!has','@validUntil']],
+                        ['==','$type','Point'],
                         ["<=","@validSince", time]
                     ])
 
@@ -259,6 +296,19 @@ var timeline = new D3Timeline1D(function(brushEvent){
 
                      map.setFilter('current-lines', ['all',
                         ['==','$type',"LineString"],
+                        ['any',['==','@validUntil',false], ['!has','@validUntil']],
+                        ["<=","@validSince", time]
+                    ])
+
+                     map.setFilter('historical-building',['all',
+                       ['has','building'],
+                       ['!=','@validUntil',false],
+                       ["<=","@validSince", time],
+                       [">","@validUntil", time]
+                     ])
+
+                     map.setFilter('current-building', ['all',
+                        // ['has','building'],
                         ['any',['==','@validUntil',false], ['!has','@validUntil']],
                         ["<=","@validSince", time]
                     ])
