@@ -26,8 +26,11 @@
   "homepage": "https://github.com/jenningsanderson/wayback-viewer#readme",
   "dependencies": {
     "@mapbox/mbtiles": "^0.10.0",
+    "@mapbox/tile-reduce": "^3.2.0",
     "@mapbox/tilelive": "^6.0.0",
+    "@turf/turf": "^5.1.6",
     "express": "^4.16.4",
+    "lodash": "^4.17.11",
     "topojson": "^3.0.2"
   }
 }
